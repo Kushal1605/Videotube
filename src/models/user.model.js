@@ -66,18 +66,18 @@ const userSchema = new Schema(
 
 userSchema.plugin(mongooseAggregatePaginate);
 userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) return next();
+  if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
 userSchema.methods.isCorrectPassword = async function (password) {
-  return await bcrypt.compare(this.password, password);
+  return await bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.generateAccessToken = function () {
-  jwt.sign(
+  const accessToken = jwt.sign(
     {
       _id: this._id,
       username: this.usermame,
@@ -87,16 +87,20 @@ userSchema.methods.generateAccessToken = function () {
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY_TIME }
   );
+
+  return accessToken
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  jwt.sign(
+  const refreshToken = jwt.sign(
     {
       _id: this._id,
     },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRY_TIME }
   );
+
+  return refreshToken;
 };
 
 export default model("User", userSchema);
