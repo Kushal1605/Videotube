@@ -340,6 +340,8 @@ const getUser = asyncHandler(async (req, res) => {
   );
 });
 
+const getChannelDetails = asyncHandler(async (req, res) => {});
+
 export {
   registerUser,
   loginUser,
