@@ -43,14 +43,7 @@ const userSchema = new Schema(
         ref: "Video",
       },
     ],
-
-    videos: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Video",
-      },
-    ],
-
+    
     refreshToken: {
       type: String,
     },
