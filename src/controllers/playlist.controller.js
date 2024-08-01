@@ -19,7 +19,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new APiResponse(200, playlist, "Playlist created successfully."));
+    .json(new ApiResponse(200, playlist, "Playlist created successfully."));
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
@@ -32,6 +32,8 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   if (!videoId || !isValidObjectId(videoId)) {
     throw new ApiError("Invalid videoId");
   }
+
+  // TODO: Video Authentication
 
   const modifiedPlaylist = await Playlist.findByIdAndUpdate(
     playlistId,
@@ -104,7 +106,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, playlist, "Playlist fetched successfully"));
+    .json(new ApiResponse(200, playlist[0], "Playlist fetched successfully"));
 });
 
 const getUserAllPlaylists = asyncHandler(async (req, res) => {
@@ -182,14 +184,14 @@ const deletePlayList = asyncHandler(async (req, res) => {
 });
 
 const deleteVideoFromPlaylist = asyncHandler(async (req, res) => {
-  const { playlistId, videoId } = req.params;
+  const { playlistId, videoId } = req.query;
 
   if (!playlistId?.trim() || !isValidObjectId(playlistId)) {
-    throw new ApiError("Invalid playlist id.");
+    throw new ApiError(400, "Invalid playlist id.");
   }
 
   if (!videoId?.trim() || !isValidObjectId(videoId)) {
-    throw new ApiError("Invalid video id.");
+    throw new ApiError(400, "Invalid video id.");
   }
 
   const modifiedPlaylist = await Playlist.findByIdAndUpdate(
@@ -197,6 +199,8 @@ const deleteVideoFromPlaylist = asyncHandler(async (req, res) => {
     { $pull: { videos: videoId } },
     { new: true }
   );
+
+  console.log(modifiedPlaylist);
 
   if (!modifiedPlaylist) {
     throw new ApiError(500, "Something went wrong or video does not exists");
@@ -227,7 +231,9 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     updatedFeilds.description = description;
   }
 
-  const modifiedPlaylist = await Playlist.findById(
+  console.log(updatedFeilds);
+
+  const modifiedPlaylist = await Playlist.findByIdAndUpdate(
     playlistId,
     { $set: updatedFeilds },
     { new: true }

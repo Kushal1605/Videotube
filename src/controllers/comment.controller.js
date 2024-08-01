@@ -93,7 +93,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid video id.");
   }
 
-  const comments = Comment.aggregate([
+  const comments = await Comment.aggregate([
     {
       $match: {
         video: new mongoose.Types.ObjectId(videoId),
@@ -128,9 +128,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
       $addFields: {
         owner: {
           $first: "$owner",
-        },
-        video: {
-          $first: "$video",
         },
         likeCount: {
             $size: "$likes"

@@ -49,7 +49,7 @@ const updateTweet = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(new ApiResponse(200, updateTweet, "Tweet updated successfully"));
+    .json(new ApiResponse(200, updatedTweet, "Tweet updated successfully"));
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {
@@ -71,7 +71,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
-  const tweets = Tweet.aggregate([
+  const tweets = await Tweet.aggregate([
     {
       $match: {
         owner: req.user._id,

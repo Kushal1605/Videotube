@@ -2,6 +2,7 @@ import mongoose, { isValidObjectId } from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import { Like } from "../models/like.model.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -42,23 +43,23 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
       video: new mongoose.Types.ObjectId(videoId),
       likedBy: new mongoose.Types.ObjectId(req.user._id),
     });
-  }
 
-  if (createdLike) {
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          deletedLike,
-          "Added like to the video successfully."
-        )
+    if (createdLike) {
+      res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            createdLike,
+            "Added like to the video successfully."
+          )
+        );
+    } else {
+      throw new ApiError(
+        500,
+        "Something went wrong while adding like from thr video"
       );
-  } else {
-    throw new ApiError(
-      500,
-      "Something went wrong while adding like from thr video"
-    );
+    }
   }
 });
 
@@ -101,23 +102,23 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
       comment: new mongoose.Types.ObjectId(commentId),
       likedBy: new mongoose.Types.ObjectId(req.user._id),
     });
-  }
 
-  if (createdLike) {
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          deletedLike,
-          "Added like to the comment successfully."
-        )
+    if (createdLike) {
+      res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            createdLike,
+            "Added like to the comment successfully."
+          )
+        );
+    } else {
+      throw new ApiError(
+        500,
+        "Something went wrong while adding like from thr comment"
       );
-  } else {
-    throw new ApiError(
-      500,
-      "Something went wrong while adding like from thr comment"
-    );
+    }
   }
 });
 
@@ -160,24 +161,24 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
       tweet: new mongoose.Types.ObjectId(tweetId),
       likedBy: new mongoose.Types.ObjectId(req.user._id),
     });
-  }
-
-  if (createdLike) {
-    res
+    
+    if (createdLike) {
+      res
       .status(200)
       .json(
         new ApiResponse(
           200,
-          deletedLike,
+          createdLike,
           "Added like to the tweet successfully."
         )
       );
-  } else {
-    throw new ApiError(
-      500,
-      "Something went wrong while adding like from thr tweet"
-    );
+    } else {
+      throw new ApiError(
+        500,
+        "Something went wrong while adding like from thr tweet"
+      );
   }
+}
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
