@@ -99,6 +99,7 @@ const updateVideoDetails = asyncHandler(async (req, res) => {
   if (!videoId || !isValidObjectId(videoId)) {
     throw new ApiError(400, "Invalid VideoId");
   }
+  
   const { description, title } = req.body;
   let updatedFeilds = {};
 
