@@ -88,7 +88,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
   if (!videoId?.trim() || !isValidObjectId(videoId)) {
     throw new ApiError(401, "Invalid VideoId");
   }
-
+  // TODO: Verify if it is user video
   await Video.findByIdAndDelete(videoId);
   res.status(200).json(new ApiResponse(200, {}, "Video removed successfully."));
 });
@@ -100,6 +100,7 @@ const updateVideoDetails = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid VideoId");
   }
   
+  // TODO: Verify if it is user video
   const { description, title } = req.body;
   let updatedFeilds = {};
 
